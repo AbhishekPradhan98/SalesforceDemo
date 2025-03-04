@@ -17,7 +17,8 @@ public class MyHooks
 	WebDriver driver;
 
 	@Before
-	public void setup() throws Throwable {
+	public void setup() throws Throwable 
+	{
 		
 		Properties prop = new ConfigReader().intializeProperties();
 		driver = DriverFactory.initializeBrowser(prop.getProperty("browser"));

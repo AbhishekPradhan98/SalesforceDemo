@@ -23,7 +23,6 @@ public static WebDriver driver=null;
 		if(browserName.equals("chrome")) 
 		{
 //			WebDriverManager.chromedriver().setup();
-//			System.setProperty("webdriver.chrome.driver", "./Drivers\\chromedriver.exe");
 			 // Create ChromeOptions instance
 	        ChromeOptions options = new ChromeOptions();
 	        
@@ -39,7 +38,6 @@ public static WebDriver driver=null;
 			
 		}else if(browserName.equals("firefox")) 
 		{
-//			System.setProperty("Webdriver.firefox.driver","./Drivers\\geckodriver.exe");
 //			WebDriverManager.firefoxdriver().setup();
 			driver = new FirefoxDriver();
 			
