@@ -29,7 +29,7 @@
     <documentTitle>MOCK report</documentTitle>
 
     <!-- report name - displayed at top-nav -->
-    <reportName>Toll Master WorkFlow Automation</reportName>
+    <reportName>GreenFinch Global Consulting</reportName>
 
     <!-- timestamp format -->
     <timeStampFormat>MMM dd, yyyy HH:mm:ss</timeStampFormat>
