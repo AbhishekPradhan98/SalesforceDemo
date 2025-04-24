@@ -1,5 +1,6 @@
 package stepdefinitions;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -35,6 +37,7 @@ public class createServiceOrder {
 	public void user_navigates_to_login_page() {
 		
 		driver = DriverFactory.getDriver();	
+		
 	}
 	
 	
@@ -47,7 +50,9 @@ public class createServiceOrder {
 		
 		
 	}
-	
+
+
+
 	@And("^User enters valid password (.+) into password field$")
 	public void user_enters_valid_password_into_password_field(String passwordText) 
 	{
@@ -74,7 +79,26 @@ public class createServiceOrder {
 	@When("user click Create Service Request link")
 	public void user_click_create_service_request_link() 
 	{
-	    driver.findElement(By.xpath("//lightning-layout-item[5]//slot[1]//lightning-icon[1]")).click();
+//	    driver.findElement(By.xpath("(//*[name()='svg'][@class='slds-icon slds-icon_large'])[1]")).click();
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+		By svgLocator = By.xpath("(//*[name()='svg'][@class='slds-icon slds-icon_large'])[1]");
+
+		for (int i = 0; i < 2; i++) 
+		{
+		    try 
+		    {
+		        WebDriverWait wait1 = new WebDriverWait(driver, Duration.ofSeconds(10));
+		        WebElement svgIcon = wait1.until(ExpectedConditions.elementToBeClickable(svgLocator));
+		        svgIcon.click();
+		        break; // exit loop if successful
+		    } catch (StaleElementReferenceException e) 
+		    {
+		        System.out.println("Stale element, retrying...");
+		    }
+		}
+
+
 		
 	}
 	@Then("Client Information page is display")
@@ -123,7 +147,7 @@ public class createServiceOrder {
         	
         	for(int i=0;i<fromlist.size();i++)
         	{
-        		if(fromlist.get(i).getText().contains("DMI HOUSING FINANCE PRIVATE LIMITED"))
+        		if(fromlist.get(i).getText().contains("AU SMALL FINANCE BANK LIMITED"))
         		{
         			fromlist.get(i).click();
         			break;
@@ -140,8 +164,8 @@ public class createServiceOrder {
            driver.findElement(By.xpath("//div[@class='dropdown-item']")).click();     
           
           
-//            // Entering Branch Person name
-           WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+//      // Entering Branch Person name
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         // Wait for the Branch Person dropdown to be clickable
         WebElement BranchPersonName = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[starts-with(@id, 'combobox-button')]")));
         System.out.println("User selects Branch Person Name: " + branchPerson);
@@ -154,13 +178,13 @@ public class createServiceOrder {
         BranchPersonName.sendKeys(Keys.ENTER);
            
    
-//            // Selecting Loan Type
+           // Selecting Loan Type
            driver.findElement(By.xpath("(//input[@class='slds-input'])[6]")).click();
            JavascriptExecutor js = (JavascriptExecutor) driver;
            WebElement option = driver.findElement(By.xpath("//div[@data-value='Home Loan Purchase']"));
            js.executeScript("arguments[0].click();", option);
-//            
-//            // Entering Reference Number
+        
+            // Entering Reference Number
             WebElement ReferenceNumber = driver.findElement(By.xpath("(//input[@class='slds-input'])[4]"));
             ReferenceNumber.sendKeys(referenceNumber);
             
@@ -171,11 +195,12 @@ public class createServiceOrder {
 	}
 	}
  @When("user clicks on Save&Next")
- public void user_clicks_on_save_next() 
+ public void user_clicks_on_save_next() throws Throwable 
  {
 	 // Clicking Save & Next
   WebElement saveNextButton = driver.findElement(By.xpath("//button[normalize-space()='Save & Next']"));
   saveNextButton.click();
+  Thread.sleep(1000);
  }
 
 
@@ -195,6 +220,15 @@ public class createServiceOrder {
 	}
 
 	 Thread.sleep(2000);
+	 
+	 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	// Wait and click on the checkbox
+	WebElement checkbox = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@class='slds-checkbox_faux']")));
+	checkbox.click();
+	// Wait and click on the 'Save & Next' button
+	WebElement saveNextBtn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text()='Save & Next']")));
+	saveNextBtn.click();
+
  }
 
 
@@ -308,8 +342,9 @@ public class createServiceOrder {
          String pin = row.get("Pincode");
          
          
-       driver.findElement(By.xpath("(//input[@class='slds-input'])[5]")).sendKeys(Addre);
-       WebElement pincode=driver.findElement(By.xpath("//input[starts-with(@id, 'combobox-input-')]"));
+       driver.findElement(By.xpath("(//input[@class='slds-input'])[7]")).sendKeys(Addre);
+       Thread.sleep(2000); 
+       WebElement pincode=driver.findElement(By.xpath("(//input[@placeholder='Search Pincode'])"));
   	   pincode.sendKeys(pin);
         Thread.sleep(2000); 
         pincode.sendKeys(Keys.ARROW_DOWN.ENTER);
@@ -345,8 +380,6 @@ public class createServiceOrder {
      js.executeScript("arguments[0].click();", button);
      
      button.sendKeys(Keys.ARROW_DOWN.ENTER);
-     
-   
 	 
  }
 
@@ -354,8 +387,6 @@ public class createServiceOrder {
  @When("User clicks the {string} button and fills in the required details:")
  public void user_clicks_the_button_and_fills_in_the_required_details(String string, io.cucumber.datatable.DataTable dataTable) throws Throwable 
  {
-	
-	 
 	 
 	 //click Add Adress link
      driver.findElement(By.xpath("(//button[contains(text(),'Add Address')])[1]")).click();
@@ -369,8 +400,11 @@ public class createServiceOrder {
          String pincode = row.get("Pincode");
          
          
-         driver.findElement(By.xpath("(//input[@class='slds-input'])[6]")).sendKeys(SecAddress);
-    	 WebElement pincode1=driver.findElement(By.xpath("//input[starts-with(@id, 'combobox-input-')]"));
+        WebElement ele= driver.findElement(By.xpath("(//input[@class='slds-input'])[8]"));
+        ele.click();
+        ele.sendKeys(SecAddress);
+        Thread.sleep(2000);
+    	 WebElement pincode1=driver.findElement(By.xpath("(//input[@placeholder='Search Pincode'])"));
     	 pincode1.sendKeys(pincode);
          Thread.sleep(2000);
          pincode1.sendKeys(Keys.ARROW_DOWN.ENTER);
@@ -382,199 +416,61 @@ public class createServiceOrder {
      
  }
     @When("user clicks on Submit Button")
-    public void user_clicks_on_submit_button() 
+    public void user_clicks_on_submit_button() throws Throwable 
     {
-    	// Wait until the Submit button is clickable
-//    	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-//    	WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(@class, 'saveBtn') and text()='Submit']")));
-//
-//    	// Click the Submit button
-//    	submitButton.click();
-    	
     	// Wait for the loader (spinner) to disappear
     	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    	wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//lightning-spinner")));
-
     	// Wait until the Submit button is clickable
     	WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(@class, 'saveBtn') and text()='Submit']")));
 
-    	// Click the Submit button
-    	submitButton.click();
+    	// Check if the button is enabled
+//    	if (submitButton.isEnabled()) 
+//    	{
+//    	    System.out.println("Submit button is enabled.");
+//    	} else 
+//    	{
+//    	    System.out.println("Submit button is disabled.");
+//    	}
 
+    	 driver.findElement(By.xpath("//button[text()='Upload Document']")).click();
+    	WebElement ele= driver.findElement(By.xpath("//input[@name='enter-search']"));
+    	Thread.sleep(2000);
+    	ele.sendKeys("document");
+    	Thread.sleep(2000);
+    	ele.clear();
+    	
+    	
+    	driver.findElement(By.xpath("//button[text()='Add Document']")).click();
+    	
+    	
+    	
+    	WebElement ele1= driver.findElement(By.xpath("(//input[@class='slds-input' or @type='text'])[4]"));
+    	ele1.click();
+    	Thread.sleep(2000);
+         driver.findElement(By.xpath("//span[@class='slds-checkbox_faux']")).click();
+         Thread.sleep(2000);
+         ele1.click();
+         
+         
+//         driver.findElement(By.xpath("//input[@name='fileUploader']")).sendKeys("/SalesforceDemo/upload.pdf");
+         
+         
+//         String filePath = new File("SalesforceDemo/upload.pdf").getAbsolutePath();
+//         driver.findElement(By.xpath("//input[@name='fileUploader']")).sendKeys(filePath);
+         
+         driver.findElement(By.xpath("//input[@name='fileUploader']")).sendKeys("C:\\Users\\Abhishek\\git\\SalesforceDemo\\SalesforceDemo\\upload.pdf");
+         Thread.sleep(1000);
+          driver.findElement(By.xpath("(//button[@type='button'])[16]")).click();
+
+
+         Thread.sleep(1000);
+    	driver.findElement(By.xpath("(//button[@class='slds-button slds-button_neutral saveBtn'])[1]")).click();
+    	Thread.sleep(1000);
+    	JavascriptExecutor js = (JavascriptExecutor) driver;
+    	js.executeScript("arguments[0].click();", submitButton);
 
     }
 
-
-
-
-
-
-
-
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- @When("User enters Mobile Number and Enter Additional Information")
- public void user_enters_mobile_number_and_enter_additional_information() throws Throwable 
- {
-	// Generate a random 10-digit mobile number
-//		 commonUtils=new CommonUtils();
-//	     driver.findElement(By.xpath("(//input[@class='slds-input'])[4]")).sendKeys(CommonUtils.generateRandomMobileNumber());
-//	     
-//	     //enter Adress
-//	     driver.findElement(By.xpath("//button[normalize-space()='Additional Information']")).click();
-//	     
-//	     //enter details
-//	     driver.findElement(By.xpath("(//input[starts-with(@id, 'input')])[5]")).sendKeys("CHKPG1234R");  //enter pan
-//	     driver.findElement(By.xpath("(//input[starts-with(@id, 'input')])[7]")).sendKeys("909064737272");  //enter Aadhar 
-//	    WebElement status= driver.findElement(By.xpath("(//button[@type='button'])[15]"));  //enter marital status 
-//	    status.click();
-//	    status.sendKeys(Keys.ARROW_DOWN.ENTER);
-//	    
-//	    
-//	     driver.findElement(By.xpath("(//input[starts-with(@id, 'input')])[9]")).sendKeys("Genus");  //enter Electricity Provider
-//	     driver.findElement(By.xpath("(//input[starts-with(@id, 'input')])[11]")).sendKeys("Abhi");  //enter Spouse Name
-//	    
-//	     
-//	     driver.findElement(By.xpath("(//input[starts-with(@id, 'input')])[8]")).sendKeys("13-Mar-1998");  //enter Date of Birth
-//	     
-//	     driver.findElement(By.xpath("(//input[starts-with(@id, 'input')])[10]")).sendKeys("123454321");  //enter Electricity Counsumer Number
-//	     
-//	    WebElement gender= driver.findElement(By.xpath("(//button[@type='button'])[16]"));
-//	    gender.click();
-//	    
-//	    gender.sendKeys(Keys.ARROW_DOWN.ENTER);  //enter Gender as male
-//	    
-//	    
-//	    //click save button
-//	    driver.findElement(By.xpath("//button[normalize-space()='Save']")).click();
-	    
-	    
-	    //------------------------------------Add Address
-	    
-//	    driver.findElement(By.xpath("(//button[contains(text(),'Add Address')])[1]")).click();   //click Add Address link
-//
-//	    //Address detail page 
-//	    driver.findElement(By.xpath("(//input[@class='slds-input'])[5]")).sendKeys("Mansarovar");
-//	    
-//	     WebElement pincode=driver.findElement(By.xpath("//input[starts-with(@id, 'combobox-input-')]"));
-//	     pincode.sendKeys("302020");
-//         Thread.sleep(2000); 
-//         pincode.sendKeys(Keys.ARROW_DOWN);
-//         Thread.sleep(500); // Small wait to ensure dropdown item is selected
-//         pincode.sendKeys(Keys.ENTER);
-//	    
-//	    //--------
-//
-//         driver.findElement(By.xpath("//button[normalize-space()='Save']")).click();   //click save button
-//         
-        
-         //in Add Collateral Details select dropdown
-         WebElement button = driver.findElement(By.xpath("(//button[starts-with(@id, 'combobox-button-')])[3]"));
-         JavascriptExecutor js = (JavascriptExecutor) driver;
-         js.executeScript("arguments[0].click();", button);
-         
-         button.sendKeys(Keys.ARROW_DOWN.ENTER);
-         
-         //click Add Adress link
-         driver.findElement(By.xpath("(//button[contains(text(),'Add Address')])[1]")).click();
-         
-         driver.findElement(By.xpath("(//input[@class='slds-input'])[6]")).sendKeys("Mansarovar");
- 	    
-         
- 	      WebElement pincode1=driver.findElement(By.xpath("//input[starts-with(@id, 'combobox-input-')]"));
- 	      pincode1.sendKeys("302020");
-          Thread.sleep(2000);
-          pincode1.sendKeys(Keys.ARROW_DOWN.ENTER);
-      
-          
-          
-          
-          driver.findElement(By.xpath("//button[normalize-space()='Save']")).click();   //click save button
-
-          driver.findElement(By.xpath("//button[normalize-space()='Save & Next']")).click();  //click save and next button
-	     
-          
-          
-          //service details page is display here user can upload file and click submit button
-
-//        driver.findElement(By.xpath("(//button[@class='slds-button slds-button_neutral'])[2]")).click();  
-          
-          // Wait for the button to be visible and clickable
-          WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-          WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(@class, 'slds-button_neutral') and contains(@class, 'saveBtn')]")));   
-
-
-          
-          
-
-
- }
- 
- 
- 
- 
- @When("User navigates to the Add Collateral Details section")
- public void user_navigates_to_the_add_collateral_details_section() 
- {
-     System.out.println("user Navigate to Add Collateral Details section");
- }
-
- @When("User verify Collateral Id it should be disabled and selects Collateral Type from dropdown")
- public void user_verify_collateral_id_it_should_be_disabled_and_selects_collateral_type_from_dropdown() throws Throwable 
- {
-	 WebElement field = driver.findElement(By.xpath("(//input[@class='slds-input'])[5]"));
-
-	 if (!field.isEnabled()) 
-	 {
-	     System.out.println("Field is disabled.");
-	 } else 
-	 {
-	     System.out.println("Field is enabled.");
-	 }
-
-//user select Collateral Type from dropdown
-	 
-
-     
- }
-
-
-
-
-
-
-
-
- @When("User provides City as {string} and Address as {string}")
- public void user_provides_city_as_and_address_as(String string, String string2) 
- {
-    
- }
-
-
-
- 
- 
- 
-
-
-
-
- 
 }
 
 	

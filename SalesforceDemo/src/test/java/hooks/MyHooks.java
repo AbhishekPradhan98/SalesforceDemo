@@ -37,8 +37,8 @@ public class MyHooks
 			scenario.attach(srcScreenshot,"image/png", scenarioName);
 		}
 		
-		Thread.sleep(5000);
-		driver.quit();
+//		Thread.sleep(6000);
+//		driver.quit();
 		
 	
 	}

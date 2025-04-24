@@ -29,8 +29,10 @@ And User clicks the "Add Address" button and fills in the required details:
  And  user clicks on Submit Button
 
 
+
   Examples:
-  |  email              |    pwd    |ChooseAccount	 |Branch| BranchPerson   |  LoanType        |ReferenceNumber|LoanAmount| name     | Address   |     Pincode          | 
-  |testingcord@gfgc.com |Test@12345 |    DMI         |Rewari|Jagdish Prashad |Home Loan Purchase| REF-789456    | 50000    |Abhishek  | Mansarovar|    302022-test master| 
+  |    email                  |    pwd    |  ChooseAccount	                |   Branch       |  BranchPerson            |  LoanType        |ReferenceNumber|LoanAmount| name     | Address   |     Pincode     | 
+  |raghvendraarvind@gmail.com |Test@12345 |  AU SMALL FINANCE BANK LIMITED  |Service Branch 1|Service brach one Contact |Home Loan Purchase| REF-789456    | 50000    |Abhishek  | Mansarovar|    302020       | 
+
 
 

@@ -25,7 +25,7 @@ public static WebDriver driver=null;
 //			WebDriverManager.chromedriver().setup();
 			 // Create ChromeOptions instance
 	        ChromeOptions options = new ChromeOptions();
-	        
+//	        options.addArguments("--headless"); // Run Chrome in headless mode
 	        // Disable notifications
 	        options.addArguments("--disable-notifications");
 			driver = new ChromeDriver(options);
