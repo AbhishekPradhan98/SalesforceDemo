@@ -32,7 +32,7 @@ And User clicks the "Add Address" button and fills in the required details:
 
   Examples:
   |    email                  |    pwd    |  ChooseAccount	                |   Branch       |  BranchPerson            |  LoanType        |ReferenceNumber|LoanAmount| name     | Address   |     Pincode     | 
-  |raghvendraarvind@gmail.com |Test@12345 |  AU SMALL FINANCE BANK LIMITED  |Service Branch 1|Service brach one Contact |Home Loan Purchase| REF-789456    | 50000    |Abhishek  | Mansarovar|    302020       | 
+  |raghvendraarvind@gmail.com |Test@1234  |  AU SMALL FINANCE BANK LIMITED  |Service Branch 1|Service brach one Contact |Home Loan Purchase| REF-789456    | 50000    |Abhishek  | Mansarovar|    302020       | 
 
 
 
